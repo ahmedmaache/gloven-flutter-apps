@@ -71,3 +71,9 @@ gloven-keystore.jks
 .DS_Store
 Thumbs.db
 
+
+# Sensitive files
+keystore_base64.txt
+gloven-keystore.jks
+*.jks
+GITHUB_SECRETS_INSTRUCTIONS.txt

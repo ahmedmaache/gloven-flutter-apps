@@ -1,0 +1,5 @@
+package org.gloven.app28
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()

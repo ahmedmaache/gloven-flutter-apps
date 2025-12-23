@@ -1,0 +1,79 @@
+name: Build All Flutter Apps
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      app_number:
+        description: 'App number to build (1-100), leave empty for all'
+        required: false
+        type: string
+
+jobs:
+  build-apps:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app_number: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
+      fail-fast: false
+      max-parallel: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.5'
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: |
+          flutter pub get
+          cd apps/app$(printf "%02d" ${{ matrix.app_number }})
+          flutter pub get
+
+      - name: Setup Android signing
+        run: |
+          APP_DIR="apps/app$(printf "%02d" ${{ matrix.app_number }})"
+          mkdir -p $APP_DIR/android/app
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > $APP_DIR/android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> $APP_DIR/android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> $APP_DIR/android/key.properties
+          echo "storeFile=${{ secrets.KEYSTORE_FILE }}" >> $APP_DIR/android/key.properties
+          
+          # Decode base64 keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $APP_DIR/android/gloven-keystore.jks
+
+      - name: Build AAB
+        run: |
+          cd apps/app$(printf "%02d" ${{ matrix.app_number }})
+          flutter build appbundle --release
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app$(printf "%02d" ${{ matrix.app_number }})-aab
+          path: apps/app$(printf "%02d" ${{ matrix.app_number }})/build/app/outputs/bundle/release/app-release.aab
+          retention-days: 90
+
+      - name: Upload to GitHub Releases
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: apps/app$(printf "%02d" ${{ matrix.app_number }})/build/app/outputs/bundle/release/app-release.aab
+          tag_name: app$(printf "%02d" ${{ matrix.app_number }})-v${{ github.run_number }}
+          name: App $(printf "%02d" ${{ matrix.app_number }}) Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

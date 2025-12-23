@@ -1,0 +1,33 @@
+#!/bin/bash
+# Script to help set up GitHub Secrets
+# Run this to encode your keystore for GitHub Secrets
+
+echo "GitHub Secrets Setup Helper"
+echo "============================"
+echo ""
+echo "You need to set up the following GitHub Secrets:"
+echo ""
+echo "1. KEYSTORE_PASSWORD - Your keystore password"
+echo "2. KEY_PASSWORD - Your key password"
+echo "3. KEY_ALIAS - Your key alias (default: gloven-key)"
+echo "4. KEYSTORE_BASE64 - Base64 encoded keystore file"
+echo "5. GCP_SA_KEY - Google Cloud Service Account JSON for Play Store API"
+echo "6. GCP_PROJECT_ID - Google Cloud Project ID"
+echo ""
+echo "To encode your keystore:"
+echo "  base64 -i gloven-keystore.jks | pbcopy  # macOS"
+echo "  base64 -i gloven-keystore.jks | xclip   # Linux"
+echo ""
+echo "Or run: base64 -i gloven-keystore.jks"
+echo ""
+echo "To set GitHub Secrets, go to:"
+echo "  https://github.com/YOUR_USERNAME/YOUR_REPO/settings/secrets/actions"
+echo ""
+echo "Or use GitHub CLI:"
+echo "  gh secret set KEYSTORE_PASSWORD"
+echo "  gh secret set KEY_PASSWORD"
+echo "  gh secret set KEY_ALIAS"
+echo "  gh secret set KEYSTORE_BASE64 < <(base64 -i gloven-keystore.jks)"
+echo "  gh secret set GCP_SA_KEY < service-account.json"
+echo "  gh secret set GCP_PROJECT_ID"
+

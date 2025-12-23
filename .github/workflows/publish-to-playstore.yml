@@ -1,0 +1,88 @@
+name: Publish to Google Play Store
+
+on:
+  workflow_dispatch:
+    inputs:
+      app_number:
+        description: 'App number to publish (1-100)'
+        required: true
+        type: choice
+        options:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          - '6'
+          - '7'
+          - '8'
+          - '9'
+          - '10'
+          - 'all'
+      track:
+        description: 'Play Store track'
+        required: true
+        type: choice
+        options:
+          - 'internal'
+          - 'alpha'
+          - 'beta'
+          - 'production'
+        default: 'internal'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.5'
+          channel: 'stable'
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Authenticate to Google Play
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Download AAB artifacts
+        if: github.event.inputs.app_number != 'all'
+        uses: actions/download-artifact@v4
+        with:
+          name: app$(printf "%02d" ${{ github.event.inputs.app_number }})-aab
+          path: ./aabs
+
+      - name: Download all AAB artifacts
+        if: github.event.inputs.app_number == 'all'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: 'app*-aab'
+          merge-multiple: false
+          path: ./aabs
+
+      - name: Publish to Play Store
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GCP_SA_KEY }}
+          packageName: org.gloven.app$(printf "%02d" ${{ github.event.inputs.app_number }})
+          releaseFiles: ./aabs/app$(printf "%02d" ${{ github.event.inputs.app_number }})/app-release.aab
+          track: ${{ github.event.inputs.track }}
+          status: completed
+          changesNotSentForReview: false
+

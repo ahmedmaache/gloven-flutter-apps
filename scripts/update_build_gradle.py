@@ -50,15 +50,16 @@ if (keystorePropertiesFile.exists()) {
 
 '''
     
-    # Find buildTypes and insert signingConfigs before it
-    buildtypes_match = re.search(r'(\s+)buildTypes \{', content)
-    if buildtypes_match:
-        indent = buildtypes_match.group(1)
-        insert_pos = buildtypes_match.start()
-        # Adjust signing config indentation
-        signing_config_indented = re.sub(r'^    ', indent, signing_config, flags=re.MULTILINE)
-        content = content[:insert_pos] + signing_config_indented + content[insert_pos:]
-    else:
+    # Find buildTypes and insert signingConfigs before it (only if not already exists)
+    if not has_signing_config:
+        buildtypes_match = re.search(r'(\s+)buildTypes \{', content)
+        if buildtypes_match:
+            indent = buildtypes_match.group(1)
+            insert_pos = buildtypes_match.start()
+            # Adjust signing config indentation
+            signing_config_indented = re.sub(r'^    ', indent, signing_config, flags=re.MULTILINE)
+            content = content[:insert_pos] + signing_config_indented + content[insert_pos:]
+    elif not has_signing_config:
         # If buildTypes not found, insert before the closing brace of android block
         # Find the last } before flutter block
         flutter_match = re.search(r'\nflutter \{', content)

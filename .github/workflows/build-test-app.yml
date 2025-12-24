@@ -1,0 +1,113 @@
+name: Build Test App (app01)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/app01/**'
+      - '.github/workflows/build-test-app.yml'
+
+jobs:
+  build-app01:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.5'
+          channel: 'stable'
+          cache: true
+
+      - name: Flutter doctor
+        run: flutter doctor -v
+
+      - name: Install dependencies
+        run: |
+          cd apps/app01
+          flutter pub get
+
+      - name: Setup Android signing
+        run: |
+          APP_DIR="apps/app01"
+          mkdir -p $APP_DIR/android
+          
+          # Decode base64 keystore from secret
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $APP_DIR/android/gloven-keystore.jks
+          chmod 600 $APP_DIR/android/gloven-keystore.jks
+          
+          # Create key.properties in android/ directory (where build.gradle.kts expects it via rootProject.file)
+          cat > $APP_DIR/android/key.properties << EOF
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          storeFile=gloven-keystore.jks
+          EOF
+          
+          # Verify files were created
+          echo "Checking keystore..."
+          if [ -f "$APP_DIR/android/gloven-keystore.jks" ]; then
+            echo "✅ Keystore file created"
+            ls -lh $APP_DIR/android/gloven-keystore.jks
+          else
+            echo "❌ Error: Keystore file not created"
+            exit 1
+          fi
+          
+          echo "Checking key.properties..."
+          if [ -f "$APP_DIR/android/key.properties" ]; then
+            echo "✅ key.properties created"
+            cat $APP_DIR/android/key.properties | sed 's/password=.*/password=***/' 
+          else
+            echo "❌ Error: key.properties not created"
+            exit 1
+          fi
+
+      - name: Build AAB
+        run: |
+          cd apps/app01
+          flutter clean
+          flutter pub get
+          flutter build appbundle --release
+        continue-on-error: false
+
+      - name: Verify AAB file
+        run: |
+          AAB_FILE="apps/app01/build/app/outputs/bundle/release/app-release.aab"
+          if [ -f "$AAB_FILE" ]; then
+            echo "✅ AAB file created successfully"
+            ls -lh $AAB_FILE
+            echo "File size: $(du -h $AAB_FILE | cut -f1)"
+          else
+            echo "❌ Error: AAB file not found"
+            exit 1
+          fi
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app01-number-slide-puzzle-aab
+          path: apps/app01/build/app/outputs/bundle/release/app-release.aab
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Build summary
+        run: |
+          echo "## ✅ Build Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**App**: app01 - Number Slide Puzzle" >> $GITHUB_STEP_SUMMARY
+          echo "**Package**: org.gloven.app01" >> $GITHUB_STEP_SUMMARY
+          echo "**AAB File**: app-release.aab" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Download the artifact from the Actions tab." >> $GITHUB_STEP_SUMMARY
+

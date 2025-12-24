@@ -19,17 +19,11 @@ def update_build_gradle(file_path, package_name):
                 f.write(content)
         return
     
-    # Add imports at the top if not present
-    imports = '''import java.util.Properties
-import java.io.FileInputStream
-
-'''
-    
-    # Add keystore properties before android block
+    # Add keystore properties before android block (using fully qualified names)
     keystore_props = '''val keystorePropertiesFile = rootProject.file("key.properties")
-val keystoreProperties = Properties()
+val keystoreProperties = java.util.Properties()
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+    keystoreProperties.load(java.io.FileInputStream(keystorePropertiesFile))
 }
 
 '''
@@ -82,14 +76,6 @@ if (keystorePropertiesFile.exists()) {
         'signingConfig = signingConfigs.getByName("release")',
         content
     )
-    
-    # Add imports if not present
-    if 'import java.util.Properties' not in content:
-        # Find where to insert (after plugins block)
-        plugins_match = re.search(r'(plugins \{[^}]*\})', content, re.DOTALL)
-        if plugins_match:
-            insert_pos = plugins_match.end()
-            content = content[:insert_pos] + '\n' + imports + content[insert_pos:]
     
     # Add keystore properties if not present (before android block)
     if 'keystorePropertiesFile' not in content:

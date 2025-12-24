@@ -36,28 +36,45 @@ jobs:
         with:
           flutter-version: '3.38.5'
           channel: 'stable'
+          cache: true
 
       - name: Install dependencies
         run: |
           cd apps/app$(printf "%02d" ${{ matrix.app_number }})
           flutter pub get
+          flutter doctor
 
       - name: Setup Android signing
         run: |
           APP_DIR="apps/app$(printf "%02d" ${{ matrix.app_number }})"
           mkdir -p $APP_DIR/android/app
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > $APP_DIR/android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> $APP_DIR/android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> $APP_DIR/android/key.properties
-          echo "storeFile=gloven-keystore.jks" >> $APP_DIR/android/key.properties
+          
+          # Create key.properties
+          cat > $APP_DIR/android/key.properties << EOF
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          storeFile=gloven-keystore.jks
+          EOF
           
           # Decode base64 keystore
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $APP_DIR/android/gloven-keystore.jks
+          
+          # Verify keystore was created
+          if [ ! -f "$APP_DIR/android/gloven-keystore.jks" ]; then
+            echo "❌ Error: Keystore file not created"
+            exit 1
+          fi
+          
+          echo "✅ Signing configuration ready"
 
       - name: Build AAB
         run: |
           cd apps/app$(printf "%02d" ${{ matrix.app_number }})
+          flutter clean
+          flutter pub get
           flutter build appbundle --release
+        continue-on-error: false
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4

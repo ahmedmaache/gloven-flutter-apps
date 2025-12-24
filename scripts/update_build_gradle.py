@@ -15,15 +15,19 @@ import java.io.FileInputStream
 
 '''
     
+    # Always update package name if needed
+    if f'namespace = "{package_name}"' not in content:
+        content = re.sub(r'namespace = "[^"]*"', f'namespace = "{package_name}"', content)
+        content = re.sub(r'applicationId = "[^"]*"', f'applicationId = "{package_name}"', content)
+    
+    # Check if we need to add imports
+    needs_imports = 'import java.util.Properties' not in content
+    
+    # Check if we need to update keystore properties code
+    needs_keystore_update = 'keystorePropertiesFile' not in content or 'java.util.Properties()' in content
+    
     # Check if signing config already exists
-    if 'signingConfigs {' in content or 'signingConfigs.create' in content:
-        # Already configured, just update package name if needed
-        if f'namespace = "{package_name}"' not in content:
-            content = re.sub(r'namespace = "[^"]*"', f'namespace = "{package_name}"', content)
-            content = re.sub(r'applicationId = "[^"]*"', f'applicationId = "{package_name}"', content)
-            with open(file_path, 'w') as f:
-                f.write(content)
-        return
+    has_signing_config = 'signingConfigs {' in content or 'signingConfigs.create' in content
     
     # Add keystore properties before android block (using imported classes)
     keystore_props = '''val keystorePropertiesFile = rootProject.file("key.properties")
@@ -83,15 +87,21 @@ if (keystorePropertiesFile.exists()) {
         content
     )
     
-    # Add imports if not present (after plugins block)
-    if 'import java.util.Properties' not in content:
+    # Add imports if needed (after plugins block)
+    if needs_imports:
         plugins_match = re.search(r'(plugins \{[^}]*\})', content, re.DOTALL)
         if plugins_match:
             insert_pos = plugins_match.end()
             content = content[:insert_pos] + '\n' + imports_needed + content[insert_pos:]
     
-    # Add keystore properties if not present (before android block)
-    if 'keystorePropertiesFile' not in content:
+    # Update keystore properties code if needed
+    if needs_keystore_update:
+        # Remove old keystore properties code if it exists
+        content = re.sub(r'val keystorePropertiesFile[^\n]*\n.*?keystoreProperties\.load\([^)]+\)\n', '', content, flags=re.DOTALL)
+        content = re.sub(r'val keystoreProperties = java\.util\.Properties\(\)\n', '', content)
+        content = re.sub(r'if \(keystorePropertiesFile\.exists\(\)\) \{\n\s+keystoreProperties\.load\(java\.io\.FileInputStream\(keystorePropertiesFile\)\)\n\}\n', '', content)
+        
+        # Add new keystore properties before android block
         android_match = re.search(r'\nandroid \{', content)
         if android_match:
             content = content[:android_match.start()+1] + keystore_props + content[android_match.start()+1:]

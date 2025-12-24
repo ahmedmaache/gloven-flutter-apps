@@ -39,7 +39,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          flutter pub get
           cd apps/app$(printf "%02d" ${{ matrix.app_number }})
           flutter pub get
 
@@ -50,7 +49,7 @@ jobs:
           echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > $APP_DIR/android/key.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> $APP_DIR/android/key.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> $APP_DIR/android/key.properties
-          echo "storeFile=${{ secrets.KEYSTORE_FILE }}" >> $APP_DIR/android/key.properties
+          echo "storeFile=gloven-keystore.jks" >> $APP_DIR/android/key.properties
           
           # Decode base64 keystore
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > $APP_DIR/android/gloven-keystore.jks

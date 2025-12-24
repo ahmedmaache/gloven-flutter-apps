@@ -40,20 +40,16 @@ android {
     }
 
     signingConfigs {
-        if (keystorePropertiesFile.exists()) {
-            getByName("release") {
-                keyAlias = keystoreProperties["keyAlias"] as String?
-                keyPassword = keystoreProperties["keyPassword"] as String?
-                storeFile = keystoreProperties["storeFile"]?.let { file(it as String) }
-                storePassword = keystoreProperties["storePassword"] as String?
-            }
-        } else {
-            create("release") {
-                keyAlias = keystoreProperties["keyAlias"] as String?
-                keyPassword = keystoreProperties["keyPassword"] as String?
-                storeFile = keystoreProperties["storeFile"]?.let { file(it as String) }
-                storePassword = keystoreProperties["storePassword"] as String?
-            }
+        try {
+            getByName("release")
+        } catch (e: Exception) {
+            // Config doesn't exist, create it
+        }
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
+            storeFile = keystoreProperties["storeFile"]?.let { file(it as String) }
+            storePassword = keystoreProperties["storePassword"] as String?
         }
     }
 

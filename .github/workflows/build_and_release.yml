@@ -37,7 +37,7 @@ jobs:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
           if [ -z "$KEYSTORE_BASE64" ]; then
-            echo "❌ KEYSTORE_BASE64 secret is missing! Please add it to GitHub Secrets."
+            echo "❌ KEYSTORE_BASE64 secret is missing!"
             exit 1
           fi
           echo "$KEYSTORE_BASE64" | base64 --decode > gloven-keystore.jks
@@ -50,18 +50,17 @@ jobs:
         run: |
           mkdir -p signed_aabs
           
-          # Determine target app
           APP_NAME_INPUT="${{ github.event.inputs.app_name }}"
           if [ -z "$APP_NAME_INPUT" ]; then
             if [ "${{ github.event_name }}" = "push" ]; then
               APP_NAME_INPUT="app01" 
-              echo "⚠️ Triggered by push. Building only $APP_NAME_INPUT for testing."
+              echo "⚠️ Triggered by push. Testing with $APP_NAME_INPUT."
             else
               APP_NAME_INPUT="all"
             fi
           fi
 
-          # Create signing properties template
+          # Standard key.properties for the workflow
           echo "storePassword=$STORE_PASSWORD" > key.properties
           echo "keyPassword=$KEY_PASSWORD" >> key.properties
           echo "keyAlias=$KEY_ALIAS" >> key.properties
@@ -77,19 +76,25 @@ jobs:
           for app_dir in $target_apps; do
             if [ -d "$app_dir" ]; then
               app_name=$(basename "$app_dir")
-              
-              if [ ! -d "$app_dir/android" ]; then
-                echo "⏭️ Skipping $app_name (no android folder found)"
-                continue
-              fi
+              if [ ! -d "$app_dir/android" ]; then continue; fi
 
-              echo "🚀 Preparing $app_name..."
+              echo "🚀 Patching and Building $app_name..."
               
-              # FIX: Patch build.gradle.kts to avoid 'create("release")' error
+              # COMPREHENSIVE PATCH for build.gradle.kts
+              # 1. Use maybeCreate for the release signing config
+              # 2. Ensure we use the 'release' signingConfig in the release buildType
               kts_file="$app_dir/android/app/build.gradle.kts"
               if [ -f "$kts_file" ]; then
-                sed -i 's/create("release")/getByName("release")/g' "$kts_file"
-                echo "🔧 Patched KTS file for $app_name"
+                # Replace create("release") or getByName("release") with maybeCreate("release")
+                sed -i 's/create("release")/maybeCreate("release")/g' "$kts_file"
+                sed -i 's/getByName("release")/maybeCreate("release")/g' "$kts_file"
+                
+                # Special fix for the buildType assignment line 
+                # From: signingConfig = signingConfigs.maybeCreate("release")
+                # To: signingConfig = signingConfigs.getByName("release") (Assignment must use getByName)
+                sed -i 's/signingConfig = signingConfigs.maybeCreate("release")/signingConfig = signingConfigs.getByName("release")/g' "$kts_file"
+                
+                echo "🔧 Applied robust patches to $app_name"
               fi
 
               cd "$app_dir"
@@ -101,9 +106,9 @@ jobs:
               AAB_OUT="build/app/outputs/bundle/release/app-release.aab"
               if [ -f "$AAB_OUT" ]; then
                 cp "$AAB_OUT" "../../signed_aabs/${app_name}-release.aab"
-                echo "✅ Successfully built $app_name"
+                echo "✅ Success: $app_name"
               else
-                echo "❌ Failed to generate AAB for $app_name"
+                echo "❌ Failed: $app_name"
               fi
               
               cd ../..

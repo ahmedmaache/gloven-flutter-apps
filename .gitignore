@@ -77,3 +77,5 @@ keystore_base64.txt
 gloven-keystore.jks
 *.jks
 GITHUB_SECRETS_INSTRUCTIONS.txt
+.gitignore
+setup_remaining_secrets.sh

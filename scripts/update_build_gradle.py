@@ -96,15 +96,36 @@ if (keystorePropertiesFile.exists()) {
     
     # Update keystore properties code if needed
     if needs_keystore_update:
-        # Remove old keystore properties code if it exists
-        content = re.sub(r'val keystorePropertiesFile[^\n]*\n.*?keystoreProperties\.load\([^)]+\)\n', '', content, flags=re.DOTALL)
-        content = re.sub(r'val keystoreProperties = java\.util\.Properties\(\)\n', '', content)
-        content = re.sub(r'if \(keystorePropertiesFile\.exists\(\)\) \{\n\s+keystoreProperties\.load\(java\.io\.FileInputStream\(keystorePropertiesFile\)\)\n\}\n', '', content)
+        # Remove old keystore properties code if it exists (more comprehensive pattern)
+        patterns_to_remove = [
+            r'val keystorePropertiesFile = rootProject\.file\("key\.properties"\)\n',
+            r'val keystoreProperties = java\.util\.Properties\(\)\n',
+            r'val keystoreProperties = Properties\(\)\n',
+            r'if \(keystorePropertiesFile\.exists\(\)\) \{\s*\n\s*keystoreProperties\.load\([^)]+\)\s*\n\}\s*\n',
+            r'keystoreProperties\.load\(java\.io\.FileInputStream\(keystorePropertiesFile\)\)',
+            r'keystoreProperties\.load\(FileInputStream\(keystorePropertiesFile\)\)',
+        ]
+        for pattern in patterns_to_remove:
+            content = re.sub(pattern, '', content, flags=re.MULTILINE)
         
-        # Add new keystore properties before android block
-        android_match = re.search(r'\nandroid \{', content)
-        if android_match:
-            content = content[:android_match.start()+1] + keystore_props + content[android_match.start()+1:]
+        # Remove duplicate keystorePropertiesFile lines
+        lines = content.split('\n')
+        seen_keystore = False
+        new_lines = []
+        for line in lines:
+            if 'val keystorePropertiesFile' in line:
+                if not seen_keystore:
+                    new_lines.append(line)
+                    seen_keystore = True
+            else:
+                new_lines.append(line)
+        content = '\n'.join(new_lines)
+        
+        # Add new keystore properties before android block (only if not already there)
+        if 'val keystorePropertiesFile = rootProject.file("key.properties")' not in content:
+            android_match = re.search(r'\nandroid \{', content)
+            if android_match:
+                content = content[:android_match.start()+1] + keystore_props + content[android_match.start()+1:]
     
     with open(file_path, 'w') as f:
         f.write(content)

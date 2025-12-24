@@ -54,7 +54,7 @@ jobs:
           APP_NAME_INPUT="${{ github.event.inputs.app_name }}"
           if [ -z "$APP_NAME_INPUT" ]; then
             if [ "${{ github.event_name }}" = "push" ]; then
-              APP_NAME_INPUT="app01" # Default test app for push events
+              APP_NAME_INPUT="app01" 
               echo "⚠️ Triggered by push. Building only $APP_NAME_INPUT for testing."
             else
               APP_NAME_INPUT="all"
@@ -78,22 +78,26 @@ jobs:
             if [ -d "$app_dir" ]; then
               app_name=$(basename "$app_dir")
               
-              # Skip if no android folder
               if [ ! -d "$app_dir/android" ]; then
                 echo "⏭️ Skipping $app_name (no android folder found)"
                 continue
               fi
 
-              echo "🚀 Building $app_name..."
-              cd "$app_dir"
+              echo "🚀 Preparing $app_name..."
               
-              # Inject key.properties into the app's android folder
+              # FIX: Patch build.gradle.kts to avoid 'create("release")' error
+              kts_file="$app_dir/android/app/build.gradle.kts"
+              if [ -f "$kts_file" ]; then
+                sed -i 's/create("release")/getByName("release")/g' "$kts_file"
+                echo "🔧 Patched KTS file for $app_name"
+              fi
+
+              cd "$app_dir"
               cp ../../key.properties android/key.properties || true
               
               flutter pub get
               flutter build appbundle --release --build-name=1.0.0 --build-number=${{ github.run_number }}
               
-              # Copy the resulting AAB to the collection folder
               AAB_OUT="build/app/outputs/bundle/release/app-release.aab"
               if [ -f "$AAB_OUT" ]; then
                 cp "$AAB_OUT" "../../signed_aabs/${app_name}-release.aab"

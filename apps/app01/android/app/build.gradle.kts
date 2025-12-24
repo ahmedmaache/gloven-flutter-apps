@@ -40,11 +40,6 @@ android {
     }
 
     signingConfigs {
-        try {
-            getByName("release")
-        } catch (e: Exception) {
-            // Config doesn't exist, create it
-        }
         create("release") {
             keyAlias = keystoreProperties["keyAlias"] as String?
             keyPassword = keystoreProperties["keyPassword"] as String?

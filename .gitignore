@@ -17,9 +17,9 @@
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
-**/android/key.properties
-**/android/*.jks
-**/android/*.keystore
+# **/android/key.properties (commented out - committed for this project)
+# **/android/*.jks
+# **/android/*.keystore
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
@@ -51,10 +51,10 @@
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 
-# Keystore files
-*.jks
-*.keystore
-gloven-keystore.jks
+# Keystore files (commented out - keystores are committed for this project)
+# *.jks
+# *.keystore
+# gloven-keystore.jks
 
 # Environment files
 .env
@@ -74,8 +74,8 @@ Thumbs.db
 
 # Sensitive files
 keystore_base64.txt
-gloven-keystore.jks
-*.jks
+# gloven-keystore.jks (commented out - committed for this project)
+# *.jks (commented out - committed for this project)
 GITHUB_SECRETS_INSTRUCTIONS.txt
 .gitignore
 setup_remaining_secrets.sh

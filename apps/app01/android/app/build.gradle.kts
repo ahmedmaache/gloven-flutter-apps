@@ -7,8 +7,8 @@ plugins {
 import java.util.Properties
 import java.io.FileInputStream
 
+// Load keystore properties
 val keystorePropertiesFile = rootProject.file("key.properties")
-
 val keystoreProperties = Properties()
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
@@ -40,17 +40,8 @@ android {
     }
 
     signingConfigs {
-        // Check if release config exists, if not create it
-        if (signingConfigs.findByName("release") == null) {
-            create("release") {
-                keyAlias = keystoreProperties["keyAlias"] as String?
-                keyPassword = keystoreProperties["keyPassword"] as String?
-                storeFile = keystoreProperties["storeFile"]?.let { file(it as String) }
-                storePassword = keystoreProperties["storePassword"] as String?
-            }
-        } else {
-            // Update existing config
-            getByName("release") {
+        create("release") {
+            if (keystorePropertiesFile.exists()) {
                 keyAlias = keystoreProperties["keyAlias"] as String?
                 keyPassword = keystoreProperties["keyPassword"] as String?
                 storeFile = keystoreProperties["storeFile"]?.let { file(it as String) }

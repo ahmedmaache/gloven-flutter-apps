@@ -1,0 +1,114 @@
+====================================================================================================
+APP        | PACKAGE NAME                        | ICONS           | TITLE
+====================================================================================================
+app01      | org.gloven.app01                    | 5 sizes         | Gloven App 1 - Flutter application for G
+app02      | org.gloven.app02                    | 5 sizes         | Gloven App 2 - Flutter application for G
+app03      | org.gloven.app03                    | 5 sizes         | Gloven App 3 - Flutter application for G
+app04      | org.gloven.app04                    | 5 sizes         | Gloven App 4 - Flutter application for G
+app05      | org.gloven.app05                    | 5 sizes         | Gloven App 5 - Flutter application for G
+app06      | org.gloven.app06                    | 5 sizes         | Gloven App 6 - Flutter application for G
+app07      | org.gloven.app07                    | 5 sizes         | Gloven App 7 - Flutter application for G
+app08      | org.gloven.app08                    | 5 sizes         | Gloven App 8 - Flutter application for G
+app09      | org.gloven.app09                    | 5 sizes         | Gloven App 9 - Flutter application for G
+app10      | org.gloven.app10                    | 5 sizes         | Gloven App 10 - Flutter application for 
+app100     | org.gloven.app100                   | 5 sizes         | Gloven App 100 - Flutter application for
+app11      | org.gloven.app11                    | 5 sizes         | Gloven App 11 - Flutter application for 
+app12      | org.gloven.app12                    | 5 sizes         | Gloven App 12 - Flutter application for 
+app13      | org.gloven.app13                    | 5 sizes         | Gloven App 13 - Flutter application for 
+app14      | org.gloven.app14                    | 5 sizes         | Gloven App 14 - Flutter application for 
+app15      | org.gloven.app15                    | 5 sizes         | Gloven App 15 - Flutter application for 
+app16      | org.gloven.app16                    | 5 sizes         | Gloven App 16 - Flutter application for 
+app17      | org.gloven.app17                    | 5 sizes         | Gloven App 17 - Flutter application for 
+app18      | org.gloven.app18                    | 5 sizes         | Gloven App 18 - Flutter application for 
+app19      | org.gloven.app19                    | 5 sizes         | Gloven App 19 - Flutter application for 
+app20      | org.gloven.app20                    | 5 sizes         | Gloven App 20 - Flutter application for 
+app21      | org.gloven.app21                    | 5 sizes         | Gloven App 21 - Flutter application for 
+app22      | org.gloven.app22                    | 5 sizes         | Gloven App 22 - Flutter application for 
+app23      | org.gloven.app23                    | 5 sizes         | Gloven App 23 - Flutter application for 
+app24      | org.gloven.app24                    | 5 sizes         | Gloven App 24 - Flutter application for 
+app25      | org.gloven.app25                    | 5 sizes         | Gloven App 25 - Flutter application for 
+app26      | org.gloven.app26                    | 5 sizes         | Gloven App 26 - Flutter application for 
+app27      | org.gloven.app27                    | 5 sizes         | Gloven App 27 - Flutter application for 
+app28      | org.gloven.app28                    | 5 sizes         | Gloven App 28 - Flutter application for 
+app29      | org.gloven.app29                    | 5 sizes         | Gloven App 29 - Flutter application for 
+app30      | org.gloven.app30                    | 5 sizes         | Gloven App 30 - Flutter application for 
+app31      | org.gloven.app31                    | 5 sizes         | Gloven App 31 - Flutter application for 
+app32      | org.gloven.app32                    | 5 sizes         | Gloven App 32 - Flutter application for 
+app33      | org.gloven.app33                    | 5 sizes         | Gloven App 33 - Flutter application for 
+app34      | org.gloven.app34                    | 5 sizes         | Gloven App 34 - Flutter application for 
+app35      | org.gloven.app35                    | 5 sizes         | Gloven App 35 - Flutter application for 
+app36      | org.gloven.app36                    | 5 sizes         | Gloven App 36 - Flutter application for 
+app37      | org.gloven.app37                    | 5 sizes         | Gloven App 37 - Flutter application for 
+app38      | org.gloven.app38                    | 5 sizes         | Gloven App 38 - Flutter application for 
+app39      | org.gloven.app39                    | 5 sizes         | Gloven App 39 - Flutter application for 
+app40      | org.gloven.app40                    | 5 sizes         | Gloven App 40 - Flutter application for 
+app41      | org.gloven.app41                    | 5 sizes         | Gloven App 41 - Flutter application for 
+app42      | org.gloven.app42                    | 5 sizes         | Gloven App 42 - Flutter application for 
+app43      | org.gloven.app43                    | 5 sizes         | Gloven App 43 - Flutter application for 
+app44      | org.gloven.app44                    | 5 sizes         | Gloven App 44 - Flutter application for 
+app45      | org.gloven.app45                    | 5 sizes         | Gloven App 45 - Flutter application for 
+app46      | org.gloven.app46                    | 5 sizes         | Gloven App 46 - Flutter application for 
+app47      | org.gloven.app47                    | 5 sizes         | Gloven App 47 - Flutter application for 
+app48      | org.gloven.app48                    | 5 sizes         | Gloven App 48 - Flutter application for 
+app49      | org.gloven.app49                    | 5 sizes         | Gloven App 49 - Flutter application for 
+app50      | org.gloven.app50                    | 5 sizes         | Gloven App 50 - Flutter application for 
+app51      | org.gloven.app51                    | 5 sizes         | Gloven App 51 - Flutter application for 
+app52      | org.gloven.app52                    | 5 sizes         | Gloven App 52 - Flutter application for 
+app53      | org.gloven.app53                    | 5 sizes         | Gloven App 53 - Flutter application for 
+app54      | org.gloven.app54                    | 5 sizes         | Gloven App 54 - Flutter application for 
+app55      | org.gloven.app55                    | 5 sizes         | Gloven App 55 - Flutter application for 
+app56      | org.gloven.app56                    | 5 sizes         | Gloven App 56 - Flutter application for 
+app57      | org.gloven.app57                    | 5 sizes         | Gloven App 57 - Flutter application for 
+app58      | org.gloven.app58                    | 5 sizes         | Gloven App 58 - Flutter application for 
+app59      | org.gloven.app59                    | 5 sizes         | Gloven App 59 - Flutter application for 
+app60      | org.gloven.app60                    | 5 sizes         | Gloven App 60 - Flutter application for 
+app61      | org.gloven.app61                    | 5 sizes         | Gloven App 61 - Flutter application for 
+app62      | org.gloven.app62                    | 5 sizes         | Gloven App 62 - Flutter application for 
+app63      | org.gloven.app63                    | 5 sizes         | Gloven App 63 - Flutter application for 
+app64      | org.gloven.app64                    | 5 sizes         | Gloven App 64 - Flutter application for 
+app65      | org.gloven.app65                    | 5 sizes         | Gloven App 65 - Flutter application for 
+app66      | org.gloven.app66                    | 5 sizes         | Gloven App 66 - Flutter application for 
+app67      | org.gloven.app67                    | 5 sizes         | Gloven App 67 - Flutter application for 
+app68      | org.gloven.app68                    | 5 sizes         | Gloven App 68 - Flutter application for 
+app69      | org.gloven.app69                    | 5 sizes         | Gloven App 69 - Flutter application for 
+app70      | org.gloven.app70                    | 5 sizes         | Gloven App 70 - Flutter application for 
+app71      | org.gloven.app71                    | 5 sizes         | Gloven App 71 - Flutter application for 
+app72      | org.gloven.app72                    | 5 sizes         | Gloven App 72 - Flutter application for 
+app73      | org.gloven.app73                    | 5 sizes         | Gloven App 73 - Flutter application for 
+app74      | org.gloven.app74                    | 5 sizes         | Gloven App 74 - Flutter application for 
+app75      | org.gloven.app75                    | 5 sizes         | Gloven App 75 - Flutter application for 
+app76      | org.gloven.app76                    | 5 sizes         | Gloven App 76 - Flutter application for 
+app77      | org.gloven.app77                    | 5 sizes         | Gloven App 77 - Flutter application for 
+app78      | org.gloven.app78                    | 5 sizes         | Gloven App 78 - Flutter application for 
+app79      | org.gloven.app79                    | 5 sizes         | Gloven App 79 - Flutter application for 
+app80      | org.gloven.app80                    | 5 sizes         | Gloven App 80 - Flutter application for 
+app81      | org.gloven.app81                    | 5 sizes         | Gloven App 81 - Flutter application for 
+app82      | org.gloven.app82                    | 5 sizes         | Gloven App 82 - Flutter application for 
+app83      | org.gloven.app83                    | 5 sizes         | Gloven App 83 - Flutter application for 
+app84      | org.gloven.app84                    | 5 sizes         | Gloven App 84 - Flutter application for 
+app85      | org.gloven.app85                    | 5 sizes         | Gloven App 85 - Flutter application for 
+app86      | org.gloven.app86                    | 5 sizes         | Gloven App 86 - Flutter application for 
+app87      | org.gloven.app87                    | 5 sizes         | Gloven App 87 - Flutter application for 
+app88      | org.gloven.app88                    | 5 sizes         | Gloven App 88 - Flutter application for 
+app89      | org.gloven.app89                    | 5 sizes         | Gloven App 89 - Flutter application for 
+app90      | org.gloven.app90                    | 5 sizes         | Gloven App 90 - Flutter application for 
+app91      | org.gloven.app91                    | 5 sizes         | Gloven App 91 - Flutter application for 
+app92      | org.gloven.app92                    | 5 sizes         | Gloven App 92 - Flutter application for 
+app93      | org.gloven.app93                    | 5 sizes         | Gloven App 93 - Flutter application for 
+app94      | org.gloven.app94                    | 5 sizes         | Gloven App 94 - Flutter application for 
+app95      | org.gloven.app95                    | 5 sizes         | Gloven App 95 - Flutter application for 
+app96      | org.gloven.app96                    | 5 sizes         | Gloven App 96 - Flutter application for 
+app97      | org.gloven.app97                    | 5 sizes         | Gloven App 97 - Flutter application for 
+app98      | org.gloven.app98                    | 5 sizes         | Gloven App 98 - Flutter application for 
+app99      | org.gloven.app99                    | 5 sizes         | Gloven App 99 - Flutter application for 
+====================================================================================================
+
+Total: 100 apps
+Package prefix: org.gloven.*
+
+Icon locations: android/app/src/main/res/mipmap-*/ic_launcher.png
+  - mipmap-mdpi: 48x48
+  - mipmap-hdpi: 72x72
+  - mipmap-xhdpi: 96x96
+  - mipmap-xxhdpi: 144x144
+  - mipmap-xxxhdpi: 192x192

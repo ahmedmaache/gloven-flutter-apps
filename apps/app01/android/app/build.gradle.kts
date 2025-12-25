@@ -40,9 +40,8 @@ android {
     }
 
     signingConfigs {
-        // Use getByName if it exists, otherwise create it
-        val releaseConfig = signingConfigs.findByName("release")
-        if (releaseConfig == null) {
+        // Check if release config exists, if not create it
+        if (signingConfigs.findByName("release") == null) {
             create("release") {
                 keyAlias = keystoreProperties["keyAlias"] as String?
                 keyPassword = keystoreProperties["keyPassword"] as String?
@@ -51,10 +50,12 @@ android {
             }
         } else {
             // Update existing config
-            releaseConfig.keyAlias = keystoreProperties["keyAlias"] as String?
-            releaseConfig.keyPassword = keystoreProperties["keyPassword"] as String?
-            releaseConfig.storeFile = keystoreProperties["storeFile"]?.let { file(it as String) }
-            releaseConfig.storePassword = keystoreProperties["storePassword"] as String?
+            getByName("release") {
+                keyAlias = keystoreProperties["keyAlias"] as String?
+                keyPassword = keystoreProperties["keyPassword"] as String?
+                storeFile = keystoreProperties["storeFile"]?.let { file(it as String) }
+                storePassword = keystoreProperties["storePassword"] as String?
+            }
         }
     }
 
